@@ -1,0 +1,62 @@
+
+
+// Single line comment
+
+/* Multi-line
+   comment
+ */
+
+## Formal Documentation
+#  note:  intermediate # not required
+#  similar to javadoc
+## ...
+
+
+/* Modules can span multiple files, as long as the name matches.
+ * However, one (and only one) file must provide the interface 
+ * (i.e. which names the module exports).
+ */
+module Math exports {
+    '+', 
+    '-', 
+    '*',
+    '/',
+    fibonacci
+}
+
+
+/* Classes are collections of types that satisfy the conditions specified
+ * This allows for the reference to a 'type class' that is gauranteed by
+ * the compiler for certain objects to exist
+ */
+class Num a {
+    // Objects that must be implemented to be a member of the class
+    '0' : a
+
+    // Functions that must be implemented to be a member of the class
+    fun '+' : a -> a -> a
+    fun '-' : a -> a -> a
+
+    // Possible language feature 'require'
+    require n : a that zero + n = n
+    require n : a that n + zero = n
+
+    require n : a that n - zero = n
+    require n : a that n - n    = zero
+}
+
+
+class Collection a {
+    empty : a
+
+    fun sizeof : Num b, a -> b
+
+    // In this example, we can use 0 because it is defined in the Num class
+    require sizeof empty = 0
+}
+
+
+
+/* Type definition 
+ */
+type List a = Nil | Cons a (List a)
