@@ -24,6 +24,8 @@ module Math exports {
     fibonacci
 }
 
+import IO
+
 
 /* Classes are collections of types that satisfy the conditions specified
  * This allows for the reference to a 'type class' that is gauranteed by
@@ -37,7 +39,10 @@ class Num a {
     fun '+' : a -> a -> a
     fun '-' : a -> a -> a
 
-    // Possible language feature 'require'
+    /* Possible language feature 'require', which would be implemented 
+     * with some kind of checking algorithm that determines the validity
+     * of the requirements
+     */
     require n : a that zero + n = n
     require n : a that n + zero = n
 
@@ -49,7 +54,9 @@ class Num a {
 class Collection a {
     empty : a
 
-    fun sizeof : Num b, a -> b
+    fun sizeof : Num b, Collection a -> b
+
+    fun map : (a -> b) -> Collection a -> Collection b
 
     // In this example, we can use 0 because it is defined in the Num class
     require sizeof empty = 0
@@ -60,3 +67,29 @@ class Collection a {
 /* Type definition 
  */
 type List a = Nil | Cons a (List a)
+
+
+/* Declares that a list is a collection and provides definitions to satisfy
+ * the class's conditions
+ */
+instance List a of Collection a {
+    empty = Nil
+
+    fun sizeof : List a -> Integer 
+        = \l -> case l of
+            Nil -> 0,
+            Cons a l' -> 1 + sizeof l'
+
+    fun map : (a -> b) -> List a -> List b
+        = \f la -> case la of
+            Nil -> Nil,
+            Cons a la' -> Cons (f a) (map f la')
+
+    // Requirement is checked by the compiler, not provided for by the user
+}
+
+
+
+proc main : IO () {
+    IO.println ("wassup")
+}
