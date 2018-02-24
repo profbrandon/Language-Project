@@ -1,0 +1,164 @@
+
+
+file
+    = module
+    | {top_declaration} ;
+
+
+
+module
+    = 'module' , module_export_list , 'where' , {top_declaration} ;
+
+
+
+top_declaration
+    = import_declaration
+    | record_declaration
+    | type_declaration
+    | class_declaration
+    | value_declaration
+    | procedure_declaration ;
+
+record_inner_declaration
+    = record_declaration
+    | type_declaration
+    | value_declaration
+    | procedure_declaration ;
+
+class_inner_declaration
+    = value_declaration
+    | requirement ;
+
+import_declaration
+    = 'import' , (module_import | module_import_list) ;
+
+record_declaration
+    = 'record' , record_id , '{' , {record_inner_declaration} , '}' ;
+
+type_declaration
+    = 'type' , type_constructor_id , {type_variable_id} , '=' , type ;
+
+class_declaration
+    = 'class' , class_id , type_variable_id , ['where' , class_id , type_variable_id , {class_id , type_variable_id}]
+    , '{' , {class_inner_declaration} , '}';
+
+value_declaration
+    = 'expr' , var_id , ':' , extended_type , 'where' , var_id , '=' , expression ;
+
+procedure_declaration
+    = 'proc' , var_id ;
+
+requirement
+    = 'require' , expr , '=' expr ;
+
+
+
+module_import_list 
+    = '{' , {module_import} , '}'
+
+module_import
+    = module_export_list , ['as' , module_id] ;
+
+module_export_list
+    = module_id , ['(' , comma_delimited_id_list , ')'] ;
+
+
+
+extended_type
+    = {class_id , type_variable_id , ','} , type ;
+
+type 
+    = type_id
+    | type_variable_id
+    | type , '->' , type
+    | type_constructor_id , {type | expr}
+    | '(' , type , ')' ;
+
+
+
+expr
+    = var_id
+    | numeric_literal
+    | string_literal
+    | expr expr
+    | '(' , expr , ')'
+    | '\' , var_id , [':' , extended_type] , '->' , expr 
+    | 'if' , expr , 'then' , expr , 'else' expr 
+    | 'case' , expr , 'of' , case_branch , {case_branch} ;
+
+case_branch
+    = pattern , '->' , expr ;
+
+pattern
+    = '_'
+    | identifier
+    | numeric_literal
+    | string_literal
+    | pattern pattern
+    | '(' , pattern , ') ;
+
+
+
+numeric_literal
+    = numeric_character , {numeric_character} , ['.' , numeric_character , {numeric_character}] ;
+
+string_literal
+    = '"' , {character - '"', '\"'} , '"' ;
+
+
+
+comma_delimited_id_list
+    = identifier , {',' , identifier} ;
+
+identifier
+    = alphabetic_character , {identifier_character} ;
+
+module_id
+    = type_constructor_id ;
+
+record_id
+    = type_constructor_id ;
+
+class_id
+    = type_constructor_id ;
+
+type_id
+    = type_constructor_id ;
+
+type_constructor_id
+    = uppercase_alphabetic_character , {identifier_character} ;
+
+procedure_id
+    = type_variable_id ;
+
+var_id
+    = type_variable_id ;
+
+type_variable_id
+    = lowercase_alphabetic_character , {identifier_character} ;
+
+
+
+identifier_character
+    = alpha_numeric_character
+    | "'" 
+    | '_' ;
+
+alpha_numeric_character
+    = alphabetic_character
+    | numeric_character ;
+
+alphabetic_character 
+    = uppercase_alphabetic_character
+    | lowercase_alphabetic_character ;
+
+uppercase_alphabetic_character
+    = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' 
+    | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' ;
+
+lowercase_alphabetic_character
+    = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' 
+    | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' ;
+
+numeric_character
+    = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' ;

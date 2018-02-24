@@ -24,7 +24,10 @@ module Math exports {
     fibonacci
 }
 
-import IO
+import { 
+    IO (a,b,c,ez)
+    Math (as,1,2,3)
+}
 
 
 /* Classes are collections of types that satisfy the conditions specified
@@ -90,6 +93,6 @@ instance List a of Collection a {
 
 
 
-proc main : IO () {
+proc main : Proc (List String -> ()) {
     IO.println ("wassup")
 }
